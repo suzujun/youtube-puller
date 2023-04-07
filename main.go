@@ -194,7 +194,7 @@ func do(ctx context.Context, url string) (body []byte, err error) {
 
 var (
 	regexChannelTitle = regexp.MustCompile(`<link itemprop="name" content="([^"]+)">`)
-	regexChannelURL   = regexp.MustCompile(`<link itemprop="url" href="http://www.youtube.com/(channel|user)/([a-zA-Z0-9_-]+)">`)
+	regexChannelURL   = regexp.MustCompile(`"canonicalBaseUrl":"/(channel/|@)([a-zA-Z0-9_-]+)"`)
 )
 
 func parseInfomation(buff []byte) (title, url string) {
@@ -209,7 +209,7 @@ func parseInfomation(buff []byte) (title, url string) {
 	}
 	res = regexChannelURL.FindSubmatch(buff)
 	if len(res) == 3 {
-		url = fmt.Sprintf("https://www.youtube.com/%s/%s", string(res[1]), string(res[2]))
+		url = fmt.Sprintf("https://www.youtube.com/%s%s", string(res[1]), string(res[2]))
 	}
 	return
 }
